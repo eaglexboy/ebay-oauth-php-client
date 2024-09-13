@@ -19,7 +19,7 @@
 
 namespace Ebay\Api\Client\Auth\OAuth2;
 
- require 'vendor/autoload.php';
+require 'vendor/autoload.php';
 
 use DateTime;
 use Exception;
@@ -35,8 +35,9 @@ use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Component\HttpClient\Exception\ServerException;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
- 
-class OAuth2Api {
+
+class OAuth2Api
+{
     private static Logger $logger;
     // Array<Environment, TimedCacheValue>
     private static array $appAccessTokenMap = [];
@@ -48,11 +49,12 @@ class OAuth2Api {
      * @param HttpClientInterface $client The HTTP client to use for making network calls
      * @param Level $level The minimum logging level at which this handler will be triggered
      */
-    public function __construct($stream, ?HttpClientInterface $client = null, ?Level $level = Level::Debug) {
-        if(!isset(self::$logger)){
+    public function __construct($stream, ?HttpClientInterface $client = null, ?Level $level = Level::Debug)
+    {
+        if (!isset(self::$logger)) {
             self::$logger = new Logger('OAuth2Api');
         }
-        if(!isset(self::$logger)){
+        if (!isset(self::$logger)) {
             self::$logger->pushHandler(new StreamHandler($stream, $level));
         }
 
@@ -63,7 +65,8 @@ class OAuth2Api {
      * @param Environment $environment The environment for which the token is to be generated
      * @param array<string> $scopes The scopes for which the token is to be generated
      */
-    public function getApplicationToken(Environment $environment, array $scopes): OAuthResponse {
+    public function getApplicationToken(Environment $environment, array $scopes): OAuthResponse
+    {
         $appAccessToken = self::$appAccessTokenMap[$environment];
 
         if (isset($appAccessToken) && $appAccessToken->getValue() !== null) {
@@ -103,17 +106,19 @@ class OAuth2Api {
         }
     }
 
-    private function buildAuthorization(Credentials $credentials) {
+    private function buildAuthorization(Credentials $credentials)
+    {
         $authString = $credentials->get(CredentialType::APP_ID) . ':' . $credentials->get(CredentialType::CERT_ID);
         return 'Basic ' . base64_encode($authString);
     }
 
-    public function generateUserAuthorizationUrl(Environment $environment, array $scopes, string $state = null) {
+    public function generateUserAuthorizationUrl(Environment $environment, array $scopes, string $state = null)
+    {
         $credentials = CredentialUtil::getCredentials($environment);
 
-        if(!isset($credentials)){
-            self::$logger->error('Credentials for '. $environment->name . ' is not found.');
-            throw new Exception('Credentials for '. $environment->name . ' is not found.');
+        if (!isset($credentials)) {
+            self::$logger->error('Credentials for ' . $environment->name . ' is not found.');
+            throw new Exception('Credentials for ' . $environment->name . ' is not found.');
         }
 
         $scope = OAuth2Util::buildScopeForRequest($scopes) ?? '';
@@ -126,7 +131,7 @@ class OAuth2Api {
             'auth_type' => 'oauth'
         ];
 
-        if(isset($state)){
+        if (isset($state)) {
             $data['state'] = $state;
         }
 
@@ -136,7 +141,8 @@ class OAuth2Api {
         return $url;
     }
 
-    public function exchangeCodeForAccessToken(Environment $environment, string $code) {
+    public function exchangeCodeForAccessToken(Environment $environment, string $code)
+    {
         $credentials = CredentialUtil::getCredentials($environment);
 
         $requestData = [
@@ -165,7 +171,8 @@ class OAuth2Api {
         }
     }
 
-    public function getAccessToken(Environment $environment, RefreshToken $refreshToken, array $scopes) {
+    public function getAccessToken(Environment $environment, RefreshToken $refreshToken, array $scopes)
+    {
         $credentials = CredentialUtil::getCredentials($environment);
         $scope = OAuth2Util::buildScopeForRequest($scopes);
 
@@ -195,7 +202,8 @@ class OAuth2Api {
         }
     }
 
-    public function generateIdTokenUrl(Environment $environment, string $state = null, string $nonce) {
+    public function generateIdTokenUrl(Environment $environment, string $state = null, string $nonce)
+    {
         $credentials = CredentialUtil::getCredentials($environment);
 
         $data = [
@@ -205,7 +213,7 @@ class OAuth2Api {
             'nonce' => $nonce,
         ];
 
-        if(isset($state)){
+        if (isset($state)) {
             $data['state'] = $state;
         }
 
@@ -216,18 +224,21 @@ class OAuth2Api {
     }
 }
 
-class TimedCacheValue {
+class TimedCacheValue
+{
     private OAuthResponse $value;
     private DateTime $expiresAt;
 
-    public function __construct(OAuthResponse $value, DateTime $expiresAt) {
+    public function __construct(OAuthResponse $value, DateTime $expiresAt)
+    {
         $this->value = $value;
         $this->expiresAt = clone $expiresAt;
         //Setting a buffer of 5 minutes for refresh
         $this->expiresAt->modify('-5 minutes');
     }
 
-    public function getValue() {
+    public function getValue()
+    {
         if (new DateTime() < $this->expiresAt) {
             return $this->value;
         }

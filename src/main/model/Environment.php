@@ -21,20 +21,23 @@ namespace Ebay\Api\Client\Auth\OAuth2\Model;
 
 use Ebay\Api\Client\Auth\OAuth2\Trait\Enum;
 
-enum Environment: string {
+enum Environment: string
+{
     use Enum;
     case PRODUCTION = 'api.ebay.com';
     case SANDBOX = 'api.sandbox.ebay.com';
 
-    public function getWebEndpoint(): string {
-        return match($this) {
+    public function getWebEndpoint(): string
+    {
+        return match ($this) {
             self::PRODUCTION => 'https://auth.ebay.com/oauth2/authorize',
             self::SANDBOX => 'https://auth.sandbox.ebay.com/oauth2/authorize',
         };
     }
 
-    public function getApiEndpoint(): string {
-        return match($this) {
+    public function getApiEndpoint(): string
+    {
+        return match ($this) {
             self::PRODUCTION => 'https://api.ebay.com/identity/v1/oauth2/token',
             self::SANDBOX => 'https://api.sandbox.ebay.com/identity/v1/oauth2/token',
         };

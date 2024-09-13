@@ -19,11 +19,13 @@
 
 namespace Ebay\Api\Client\Auth\OAuth2;
 
-class Credentials {
+class Credentials
+{
     // Array<CredentialType, string>
     private array $credentialTypeLookupMap = [];
 
-    public function __construct(array &$map) {
+    public function __construct(array &$map)
+    {
         foreach ($map as $key => $value) {
             CredentialUtil::$logger->debug(sprintf("adding credentials \t%s = %s", $key, $value));
             $credentialType = CredentialType::lookupBy($key);
@@ -33,11 +35,13 @@ class Credentials {
         }
     }
 
-    public function get(string $credentialType): ?string {
+    public function get(string $credentialType): ?string
+    {
         return $this->credentialTypeLookupMap[$credentialType] ?? null;
     }
 
-    public function toString(): string {
+    public function toString(): string
+    {
         return var_export($this->credentialTypeLookupMap, true);
     }
 }

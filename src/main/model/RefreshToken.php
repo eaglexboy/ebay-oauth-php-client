@@ -21,32 +21,39 @@ namespace Ebay\Api\Client\Auth\OAuth2\Model;
 
 use DateTime;
 
-class RefreshToken {
+class RefreshToken
+{
     private string $token;
     private DateTime $expiresOn;
     private TokenType $tokenType = TokenType::USER;
 
-    public function getToken(): string {
+    public function getToken(): string
+    {
         return $this->token;
     }
 
-    public function setToken(string $token): void {
+    public function setToken(string $token): void
+    {
         $this->token = $token;
     }
 
-    public function getExpiresOn(): DateTime {
+    public function getExpiresOn(): DateTime
+    {
         return $this->expiresOn;
     }
 
-    public function setExpiresOn(DateTime $expiresOn) {
+    public function setExpiresOn(DateTime $expiresOn)
+    {
         $this->expiresOn = $expiresOn;
     }
 
-    public function getTokenType(): TokenType {
+    public function getTokenType(): TokenType
+    {
         return $this->tokenType;
     }
 
-    public function __toString(): string {
+    public function __toString(): string
+    {
         return sprintf(
             "RefreshToken{token='%s', expiresOn='%s', tokenType='%s'}",
             $this->token,

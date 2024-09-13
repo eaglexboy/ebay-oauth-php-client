@@ -23,31 +23,37 @@ use Ebay\Api\Client\Auth\OAuth2\Model\Environment;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Yaml\Yaml;
 
-class CredentialUtil {
+class CredentialUtil
+{
     // Array<Environment, Credentials>
     private static array $envCredentialsMap = [];
     public static LoggerInterface $logger;
 
-    public static function setLogger(LoggerInterface $logger): void {
+    public static function setLogger(LoggerInterface $logger): void
+    {
         self::$logger = $logger;
     }
 
-    public static function load(string $yamlString): void {
+    public static function load(string $yamlString): void
+    {
         self::$logger->debug("CredentialHelper.loadFile");
         self::_load(Yaml::parse($yamlString));
     }
 
-    public static function loadFile($yamlFile): void {
+    public static function loadFile($yamlFile): void
+    {
         self::$logger->debug("CredentialHelper.load");
         self::_load(Yaml::parseFile($yamlFile));
     }
 
-    private static function _load(mixed $values): void {
+    private static function _load(mixed $values): void
+    {
         self::$logger->debug(var_export($values, true));
         self::iterateYaml($values);
     }
 
-    private static function iterateYaml(mixed $values): void {
+    private static function iterateYaml(mixed $values): void
+    {
         foreach ($values as $key => $value) {
             self::$logger->debug("Key attempted: " . $key);
             $environment = Environment::lookupBy($key);
@@ -64,11 +70,13 @@ class CredentialUtil {
         }
     }
 
-    public static function dump(): ?string {
+    public static function dump(): ?string
+    {
         return var_export(self::$envCredentialsMap, true);
     }
 
-    public static function getCredentials(Environment $environment): ?Credentials {
+    public static function getCredentials(Environment $environment): ?Credentials
+    {
         return self::$envCredentialsMap[$environment] ?? null;
     }
 }

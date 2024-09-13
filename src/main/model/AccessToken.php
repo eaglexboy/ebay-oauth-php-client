@@ -23,36 +23,44 @@ use Ebay\Api\Client\Auth\OAuth2\Model\TokenType;
 
 use DateTime;
 
-class AccessToken {
+class AccessToken
+{
     private string $token;
     private DateTime $expiresOn;
     private TokenType $tokenType;
 
-    public function getToken(): string {
+    public function getToken(): string
+    {
         return $this->token;
     }
 
-    public function setToken(string $token): void {
+    public function setToken(string $token): void
+    {
         $this->token = $token;
     }
 
-    public function getExpiresOn(): DateTime {
+    public function getExpiresOn(): DateTime
+    {
         return $this->expiresOn;
     }
 
-    public function setExpiresOn(DateTime $expiresOn): void {
+    public function setExpiresOn(DateTime $expiresOn): void
+    {
         $this->expiresOn = $expiresOn;
     }
 
-    public function setTokenType(TokenType $tokenType): void {
+    public function setTokenType(TokenType $tokenType): void
+    {
         $this->tokenType = $tokenType;
     }
 
-    public function getTokenType(): TokenType {
+    public function getTokenType(): TokenType
+    {
         return $this->tokenType;
     }
 
-    public function __toString(): string {
+    public function __toString(): string
+    {
         return sprintf(
             "AccessToken{token='%s', expiresOn='%s'}",
             $this->token,

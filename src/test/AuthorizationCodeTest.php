@@ -25,7 +25,8 @@ use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Component\HttpClient\Response\MockResponse;
 
-class AuthorizationCodeTest extends TestCase {
+class AuthorizationCodeTest extends TestCase
+{
     private static bool $fromFile = true;
     private static $scopeList = [
         "https://api.ebay.com/oauth/api_scope",
@@ -35,17 +36,21 @@ class AuthorizationCodeTest extends TestCase {
     //NOTE: Change this env to Environment::PRODUCTION to run this test in PRODUCTION
     private static $executionEnv = Environment::SANDBOX;
 
-    public static function setUpBeforeClass(): void {
+    public static function setUpBeforeClass(): void
+    {
         CredentialLoaderTestUtil::commonLoadCredentials(self::$executionEnv, self::$fromFile);
         self::assertNotnull(CredentialLoaderTestUtil::$CRED_USERNAME, "Please check if test-config.yaml is setup correctly");
         self::assertNotnull(CredentialLoaderTestUtil::$CRED_PASSWORD, "Please check if test-config.yaml is setup correctly");
         self::$fromFile = false;
     }
 
-    public function testConfigLoadYamlFile() {
+    public function testConfigLoadYamlFile()
+    {
         if (!CredentialLoaderTestUtil::$isAppCredentialsLoaded) {
-            fwrite(STDERR,
-                "Please check if ebay-config.yaml is setup correctly for app credentials\n");
+            fwrite(
+                STDERR,
+                "Please check if ebay-config.yaml is setup correctly for app credentials\n"
+            );
             return;
         }
 
@@ -57,15 +62,20 @@ class AuthorizationCodeTest extends TestCase {
         $this->assertStringContainsString("REDIRECT_URI", $credentialHelperStr);
     }
 
-    public function testExchangeAuthorizationCode() {
+    public function testExchangeAuthorizationCode()
+    {
         if (!CredentialLoaderTestUtil::$isAppCredentialsLoaded) {
-            fwrite(STDERR,
-                "Please check if ebay-config.yaml is setup correctly for app credentials\n");
+            fwrite(
+                STDERR,
+                "Please check if ebay-config.yaml is setup correctly for app credentials\n"
+            );
             return;
         }
         if (!CredentialLoaderTestUtil::$isUserCredentialsLoaded) {
-            fwrite(STDERR,
-                "Please check if test-config.yaml is setup correctly for user credentials\n");
+            fwrite(
+                STDERR,
+                "Please check if test-config.yaml is setup correctly for user credentials\n"
+            );
             return;
         }
 
@@ -88,7 +98,9 @@ class AuthorizationCodeTest extends TestCase {
             'refresh_token_expires_in' => 1234567890
         ]));
         $oauth2Response = $auth2Api->exchangeCodeForAccessToken(
-            self::$executionEnv, $authorizationCode);
+            self::$executionEnv,
+            $authorizationCode
+        );
         $this->assertNotnull($oauth2Response);
 
         $this->assertTrue($oauth2Response->getRefreshToken() !== null);
@@ -100,7 +112,8 @@ class AuthorizationCodeTest extends TestCase {
         CredentialLoaderTestUtil::printDetailedLog("Token Exchange Completed\n" . $oauth2Response);
     }
 
-    public function testExchangeRefreshForAccessToken() {
+    public function testExchangeRefreshForAccessToken()
+    {
         if (!CredentialLoaderTestUtil::$isAppCredentialsLoaded) {
             fwrite(STDERR, "Please check if ebay-config.yaml is setup correctly for app credentials\n");
             return;
@@ -157,7 +170,8 @@ class AuthorizationCodeTest extends TestCase {
         $this->printDetailedLog("Refresh To Access Completed\n" . json_encode($accessTokenResponse));
     }
 
-    private function getAuthorizationResponseUrl(MockResponse $response) {
+    private function getAuthorizationResponseUrl(MockResponse $response)
+    {
         $client = new MockHttpClient($response);
         $auth2Api = new OAuth2Api('test_log.log');
         $authorizeUrl = $auth2Api->generateUserAuthorizationUrl(self::$executionEnv, self::$scopeList, 'current-page');
@@ -168,7 +182,8 @@ class AuthorizationCodeTest extends TestCase {
     }
 
     private function getAuthorizationCode(
-        MockResponse $response = new MockResponse('Bogus Response')) {
+        MockResponse $response = new MockResponse('Bogus Response')
+    ) {
 
         $url = $this->getAuthorizationResponseUrl($response);
         $codeIndex = strpos($url, "code=");
@@ -182,7 +197,8 @@ class AuthorizationCodeTest extends TestCase {
         return $authorizationCode;
     }
 
-    public function testGenerateAuthorizationUrlSandbox() {
+    public function testGenerateAuthorizationUrlSandbox()
+    {
         if (!CredentialLoaderTestUtil::$isAppCredentialsLoaded) {
             fwrite(STDERR, "Please check if ebay-config.yaml is setup correctly for app credentials\n");
             return;
@@ -194,7 +210,8 @@ class AuthorizationCodeTest extends TestCase {
         $this->assertNotnull($authorizationUrl);
     }
 
-    public function testGenerateAuthorizationUrlProduction() {
+    public function testGenerateAuthorizationUrlProduction()
+    {
         if (!CredentialLoaderTestUtil::$isAppCredentialsLoaded) {
             fwrite(STDERR, "Please check if ebay-config.yaml is setup correctly for app credentials\n");
             return;
@@ -206,7 +223,8 @@ class AuthorizationCodeTest extends TestCase {
         $this->assertNotnull($authorizationUrl);
     }
 
-    private function printDetailedLog($message) {
+    private function printDetailedLog($message)
+    {
         echo $message . PHP_EOL;
     }
 }

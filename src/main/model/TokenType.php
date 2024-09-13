@@ -19,7 +19,8 @@
 
 namespace Ebay\Api\Client\Auth\OAuth2\Model;
 
-enum TokenType {
+enum TokenType
+{
     case USER;
     case APPLICATION;
 }

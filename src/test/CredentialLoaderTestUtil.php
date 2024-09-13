@@ -23,14 +23,16 @@ use Exception;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Yaml\Exception\ParseException;
 
-class CredentialLoaderTestUtil {
+class CredentialLoaderTestUtil
+{
     public static $isAppCredentialsLoaded = false;
     public static $isUserCredentialsLoaded = false;
 
     public static $CRED_USERNAME = null;
     public static $CRED_PASSWORD = null;
 
-    public static function loadAppCredentials() {
+    public static function loadAppCredentials()
+    {
         $runtimeParam = self::getRuntimeParam('credential_yaml');
 
         if ($runtimeParam !== null && trim($runtimeParam) !== '') {
@@ -48,7 +50,8 @@ class CredentialLoaderTestUtil {
         }
     }
 
-    public static function loadAppCredentialsFromFile() {
+    public static function loadAppCredentialsFromFile()
+    {
         $runtimeParam = self::getRuntimeParam('credential_yaml');
 
         if ($runtimeParam !== null && trim($runtimeParam) !== '') {
@@ -66,7 +69,8 @@ class CredentialLoaderTestUtil {
         }
     }
 
-    public static function loadUserCredentials() {
+    public static function loadUserCredentials()
+    {
         $runtimeParam = self::getRuntimeParam('usercred_yaml');
         $values = [];
 
@@ -89,7 +93,8 @@ class CredentialLoaderTestUtil {
         return $values;
     }
 
-    private static function getRuntimeParam($varName) {
+    private static function getRuntimeParam($varName)
+    {
         $propertyValue = getenv($varName);
         if ($propertyValue === false || trim($propertyValue) === '') {
             // Trying from Env Variable instead
@@ -98,15 +103,15 @@ class CredentialLoaderTestUtil {
         return $propertyValue;
     }
 
-    public static function commonLoadCredentials($environment, bool $loadFromFile = false) {
+    public static function commonLoadCredentials($environment, bool $loadFromFile = false)
+    {
         //TODO: Create the file ebay-config.yaml using the ebay-config-sample.yaml before running these tests
-        if($loadFromFile){
+        if ($loadFromFile) {
             self::loadAppCredentialsFromFile();
-        }
-        else {
+        } else {
             self::loadAppCredentials();
         }
-        
+
         if (!self::$isAppCredentialsLoaded) {
             echo "Please check if ebay-config.yaml is setup correctly for app credentials";
             return;
@@ -127,7 +132,8 @@ class CredentialLoaderTestUtil {
         }
     }
 
-    public static function printDetailedLog($printStmt) {
+    public static function printDetailedLog($printStmt)
+    {
         $runtimeParam = self::getRuntimeParam('detail_log');
         if (filter_var($runtimeParam, FILTER_VALIDATE_BOOLEAN)) {
             echo $printStmt;

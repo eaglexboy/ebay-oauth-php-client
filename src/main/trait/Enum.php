@@ -16,15 +16,17 @@
  * limitations under the License.
  *
  */
+
 namespace Ebay\Api\Client\Auth\OAuth2\Trait;
 
-trait Enum {
-    public static function lookupBy(string $name): ?static {
+trait Enum
+{
+    public static function lookupBy(string $name): ?static
+    {
         foreach (self::cases() as $type) {
             if (strcasecmp($type->value, $name) === 0) {
                 return $type;
             }
         }
     }
-
 }

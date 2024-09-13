@@ -41,7 +41,7 @@ This grant type can be performed by simply using `OAuth2Api.getApplicationToken(
 ### Grant Type: Authorization Code
 This grant type can be performed by a two step process. Call `OAuth2Api.generateUserAuthorizationUrl()` to get the Authorization URL to redirect the user to. Once the user authenticates and approves the consent, the callback need to be captured by the redirect URL setup by the app and then call `OAuth2Api.exchangeCodeForAccessToken()` to get the refresh and access tokens.
 
-Read more about this grant type at [oauth-authorization-code-grant]([Quick Reference](https://developer.ebay.com/api-docs/static/oauth-authorization-code-grant.html) and https://developer.ebay.com/api-docs/static/oauth-auth-code-grant-request.html)
+Read more about this grant type at [`oauth-authorization-code-grant`](https://developer.ebay.com/api-docs/static/oauth-authorization-code-grant.html) and [`oauth-auth-code-grant-request`](https://developer.ebay.com/api-docs/static/oauth-auth-code-grant-request.html)
 
 ### Grant Type: Refresh Token
 This grant type can be performed by simply using `OAuth2Api.getAccessToken()`. Usually access tokens are short lived and if the access token is expired, the caller can use the refresh token to generate a new access token. Read more about it at [Using a refresh token to update a user access token](https://developer.ebay.com/api-docs/static/oauth-auth-code-grant-request.html)

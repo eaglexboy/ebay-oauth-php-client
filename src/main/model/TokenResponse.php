@@ -19,7 +19,8 @@
 
 namespace Ebay\Api\Client\Auth\OAuth2\Model;
 
-class TokenResponse {
+class TokenResponse
+{
     private string $accessToken;
     private string $tokenType;
     private int $expiresIn;
@@ -40,7 +41,8 @@ class TokenResponse {
         $this->refreshTokenExpiresIn = $refreshTokenExpiresIn;
     }
 
-    public static function createFromJson(string $json): TokenResponse {
+    public static function createFromJson(string $json): TokenResponse
+    {
         $data = json_decode($json, true);
         return new TokenResponse(
             $data['access_token'],
@@ -51,43 +53,53 @@ class TokenResponse {
         );
     }
 
-    public function getAccessToken(): string {
+    public function getAccessToken(): string
+    {
         return $this->accessToken;
     }
 
-    public function setAccessToken(string $accessToken): void {
+    public function setAccessToken(string $accessToken): void
+    {
         $this->accessToken = $accessToken;
     }
 
-    public function getTokenType(): string {
+    public function getTokenType(): string
+    {
         return $this->tokenType;
     }
 
-    public function setTokenType(string $tokenType): void {
+    public function setTokenType(string $tokenType): void
+    {
         $this->tokenType = $tokenType;
     }
 
-    public function getExpiresIn(): int {
+    public function getExpiresIn(): int
+    {
         return $this->expiresIn;
     }
 
-    public function setExpiresIn(int $expiresIn): void {
+    public function setExpiresIn(int $expiresIn): void
+    {
         $this->expiresIn = $expiresIn;
     }
 
-    public function getRefreshToken(): string {
+    public function getRefreshToken(): string
+    {
         return $this->refreshToken;
     }
 
-    public function setRefreshToken(string $refreshToken): void {
+    public function setRefreshToken(string $refreshToken): void
+    {
         $this->refreshToken = $refreshToken;
     }
 
-    public function getRefreshTokenExpiresIn(): int {
+    public function getRefreshTokenExpiresIn(): int
+    {
         return $this->refreshTokenExpiresIn;
     }
 
-    public function setRefreshTokenExpiresIn(int $refreshTokenExpiresIn): void {
+    public function setRefreshTokenExpiresIn(int $refreshTokenExpiresIn): void
+    {
         $this->refreshTokenExpiresIn = $refreshTokenExpiresIn;
     }
 }

@@ -27,8 +27,10 @@ use Ebay\Api\Client\Auth\OAuth2\Model\TokenResponse;
 use Ebay\Api\Client\Auth\OAuth2\Model\TokenType;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
-class OAuth2Util { 
-    public static function parseApplicationToken(string $tokenString): OAuthResponse {
+class OAuth2Util
+{
+    public static function parseApplicationToken(string $tokenString): OAuthResponse
+    {
         $tokenResponse = TokenResponse::createFromJson($tokenString);
         $token = new AccessToken();
         $token->setTokenType(TokenType::APPLICATION);
@@ -38,14 +40,16 @@ class OAuth2Util {
         return $oauthResponse;
     }
 
-    private static function generateExpiration(int $expiresIn): DateTime {
+    private static function generateExpiration(int $expiresIn): DateTime
+    {
         return (new DateTime())->add(new \DateInterval('PT' . $expiresIn . 'S'));
     }
 
     /**
      * @param array<string> $scopes
      */
-    public static function buildScopeForRequest(array $scopes): ?string {
+    public static function buildScopeForRequest(array $scopes): ?string
+    {
         $scopeList = null;
         if (!empty($scopes)) {
             $scopeList = implode('+', $scopes);
@@ -53,7 +57,8 @@ class OAuth2Util {
         return $scopeList;
     }
 
-    public static function parseUserToken($tokenString): OAuthResponse {
+    public static function parseUserToken($tokenString): OAuthResponse
+    {
         $tokenResponse = TokenResponse::createFromJson($tokenString);
         $accessToken = new AccessToken();
         $accessToken->setTokenType(TokenType::USER);
@@ -63,12 +68,14 @@ class OAuth2Util {
         $refreshToken = new RefreshToken();
         $refreshToken->setToken($tokenResponse->getRefreshToken());
         $refreshToken->setExpiresOn(
-        self::generateExpiration($tokenResponse->getRefreshTokenExpiresIn()));
+            self::generateExpiration($tokenResponse->getRefreshTokenExpiresIn())
+        );
 
         return new OAuthResponse($accessToken, $refreshToken);
     }
 
-    public static function handleError(ResponseInterface $response): OAuthResponse {
+    public static function handleError(ResponseInterface $response): OAuthResponse
+    {
         $errorMessage = $response->getContent(false);
         return new OAuthResponse(null, null, $errorMessage);
     }

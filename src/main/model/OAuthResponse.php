@@ -21,7 +21,8 @@ namespace Ebay\Api\Client\Auth\OAuth2\Model;
 
 use Ebay\Api\Client\Auth\OAuth2\Model\AccessToken;
 
-class OAuthResponse {
+class OAuthResponse
+{
     private AccessToken $accessToken;
     private RefreshToken $refreshToken;
     private string $errorMessage;
@@ -36,31 +37,38 @@ class OAuthResponse {
         $this->errorMessage = $errorMessage;
     }
 
-    public function getAccessToken(): AccessToken {
+    public function getAccessToken(): AccessToken
+    {
         return $this->accessToken;
     }
 
-    public function setAccessToken(AccessToken $accessToken): void {
+    public function setAccessToken(AccessToken $accessToken): void
+    {
         $this->accessToken = $accessToken;
     }
 
-    public function getRefreshToken(): RefreshToken {
+    public function getRefreshToken(): RefreshToken
+    {
         return $this->refreshToken;
     }
 
-    public function setRefreshToken(RefreshToken $refreshToken): void {
+    public function setRefreshToken(RefreshToken $refreshToken): void
+    {
         $this->refreshToken = $refreshToken;
     }
 
-    public function getErrorMessage(): string {
+    public function getErrorMessage(): string
+    {
         return $this->errorMessage;
     }
 
-    public function setErrorMessage(string $errorMessage): void {
+    public function setErrorMessage(string $errorMessage): void
+    {
         $this->errorMessage = $errorMessage;
     }
 
-    public function __toString(): string {
+    public function __toString(): string
+    {
         return sprintf(
             "OAuthResponse{accessToken=%s, refreshToken=%s, errorMessage='%s'}",
             $this->accessToken,

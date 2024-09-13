@@ -21,7 +21,8 @@ namespace Ebay\Api\Client\Auth\OAuth2;
 
 use Ebay\Api\Client\Auth\OAuth2\Trait\Enum;
 
-enum CredentialType: string {
+enum CredentialType: string
+{
     use Enum;
     const APP_ID = "appid";
     const CERT_ID = "certid";
