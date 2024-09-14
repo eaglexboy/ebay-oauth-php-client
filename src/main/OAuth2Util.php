@@ -57,7 +57,7 @@ class OAuth2Util
         return $scopeList;
     }
 
-    public static function parseUserToken($tokenString): OAuthResponse
+    public static function parseUserToken(string $tokenString): OAuthResponse
     {
         $tokenResponse = TokenResponse::createFromJson($tokenString);
         $accessToken = new AccessToken();

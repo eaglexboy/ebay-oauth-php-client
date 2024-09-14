@@ -19,13 +19,14 @@
 
 namespace Ebay\Api\Client\Auth\OAuth2\Model;
 
+use JsonSerializable;
 use Ebay\Api\Client\Auth\OAuth2\Model\AccessToken;
 
-class OAuthResponse
+class OAuthResponse implements JsonSerializable
 {
     private AccessToken $accessToken;
     private RefreshToken $refreshToken;
-    private string $errorMessage;
+    private ?string $errorMessage;
 
     public function __construct(
         ?AccessToken $accessToken = null,
@@ -57,7 +58,7 @@ class OAuthResponse
         $this->refreshToken = $refreshToken;
     }
 
-    public function getErrorMessage(): string
+    public function getErrorMessage(): ?string
     {
         return $this->errorMessage;
     }
@@ -75,5 +76,14 @@ class OAuthResponse
             $this->refreshToken,
             $this->errorMessage
         );
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'accessToken' => $this->accessToken,
+            'refreshToken' => $this->refreshToken,
+            'errorMessage' => $this->errorMessage
+        ];
     }
 }

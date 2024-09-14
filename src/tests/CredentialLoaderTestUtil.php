@@ -17,9 +17,13 @@
  *
  */
 
-namespace Ebay\Api\Client\Auth\OAuth2;
+namespace Ebay\Api\Client\Auth\OAuth2\Tests;
 
+use Ebay\Api\Client\Auth\OAuth2\CredentialUtil;
 use Exception;
+use Monolog\Logger;
+use Monolog\Level;
+use Monolog\Handler\StreamHandler;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Yaml\Exception\ParseException;
 
@@ -61,7 +65,7 @@ class CredentialLoaderTestUtil
         } else {
             //TODO: Create the file ebay-config.yaml using the ebay-config-sample.yaml before running these tests
             try {
-                CredentialUtil::loadFile('src/test/ebay-config.yaml');
+                CredentialUtil::loadFile('src/tests/ebay-config.yaml');
                 self::$isAppCredentialsLoaded = true;
             } catch (Exception $e) {
                 echo $e->getMessage();
@@ -84,7 +88,7 @@ class CredentialLoaderTestUtil
         } else {
             //TODO: Create the file ebay-config.yaml using the ebay-config-sample.yaml before running these tests
             try {
-                $values = Yaml::parse(file_get_contents('src/test/test-config.yaml'));
+                $values = Yaml::parse(file_get_contents(__DIR__.'/test-config.yaml'));
                 self::$isUserCredentialsLoaded = true;
             } catch (\Exception $e) {
                 echo $e->getMessage();
@@ -139,4 +143,12 @@ class CredentialLoaderTestUtil
             echo $printStmt;
         }
     }
+
+    public static function setLogger()
+    {
+        $logger = new Logger('test');
+        $logger->pushHandler(new StreamHandler('php://stdout', Level::Debug));
+        CredentialUtil::setLogger($logger);
+    }
 }
+

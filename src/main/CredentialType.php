@@ -24,8 +24,8 @@ use Ebay\Api\Client\Auth\OAuth2\Trait\Enum;
 enum CredentialType: string
 {
     use Enum;
-    const APP_ID = "appid";
-    const CERT_ID = "certid";
-    const DEV_ID = "devid";
-    const REDIRECT_URI = "redirecturi";
+    case APP_ID = "appid";
+    case CERT_ID = "certid";
+    case DEV_ID = "devid";
+    case REDIRECT_URI = "redirecturi";
 }

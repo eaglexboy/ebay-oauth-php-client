@@ -20,8 +20,9 @@
 namespace Ebay\Api\Client\Auth\OAuth2\Model;
 
 use DateTime;
+use JsonSerializable;
 
-class RefreshToken
+class RefreshToken implements JsonSerializable
 {
     private string $token;
     private DateTime $expiresOn;
@@ -57,8 +58,17 @@ class RefreshToken
         return sprintf(
             "RefreshToken{token='%s', expiresOn='%s', tokenType='%s'}",
             $this->token,
-            $this->expiresOn,
-            $this->tokenType
+            $this->expiresOn->format('Y-m-d H:i:s'),
+            $this->tokenType->name
         );
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'token' => $this->token,
+            'expiresOn' => $this->expiresOn->format('Y-m-d H:i:s'),
+            'tokenType' => $this->tokenType->name
+        ];
     }
 }

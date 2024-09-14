@@ -14,11 +14,16 @@
     },
     "autoload": {
         "psr-4": {
-            "Ebay\\Api\\Client\\Auth\\OAuth2\\": "src/main"
+            "Ebay\\Api\\Client\\Auth\\OAuth2\\": "src/main/"
         },
         "exclude-from-classmap": [
-            "**/test/*",
+            "**/tests/*",
             "**/bin/*"
         ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Ebay\\Api\\Client\\Auth\\OAuth2\\Tests\\": "src/tests/"
+        }
     }
 }

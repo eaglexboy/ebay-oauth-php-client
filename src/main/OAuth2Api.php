@@ -160,6 +160,9 @@ class OAuth2Api
                 'body' => http_build_query($requestData)
             ]);
 
+            // Block till request is completed
+            $response->getContent(false);
+
             if ($response->getStatusCode() === 200) {
                 return OAuth2Util::parseUserToken($response->getContent());
             } else {
@@ -171,7 +174,11 @@ class OAuth2Api
         }
     }
 
-    public function getAccessToken(Environment $environment, RefreshToken $refreshToken, array $scopes)
+    public function getAccessToken(
+        Environment $environment,
+        RefreshToken $refreshToken,
+        array $scopes
+    ): OAuthResponse
     {
         $credentials = CredentialUtil::getCredentials($environment);
         $scope = OAuth2Util::buildScopeForRequest($scopes);

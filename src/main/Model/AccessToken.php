@@ -19,11 +19,12 @@
 
 namespace Ebay\Api\Client\Auth\OAuth2\Model;
 
+use JsonSerializable;
 use Ebay\Api\Client\Auth\OAuth2\Model\TokenType;
 
 use DateTime;
 
-class AccessToken
+class AccessToken implements JsonSerializable
 {
     private string $token;
     private DateTime $expiresOn;
@@ -62,9 +63,19 @@ class AccessToken
     public function __toString(): string
     {
         return sprintf(
-            "AccessToken{token='%s', expiresOn='%s'}",
+            "AccessToken{token='%s', type=%s, expiresOn='%s'}",
             $this->token,
+            $this->tokenType->name,
             $this->expiresOn->format('Y-m-d H:i:s')
         );
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'token' => $this->token,
+            'expiresOn' => $this->expiresOn->format('Y-m-d H:i:s'),
+            'tokenType' => $this->tokenType->name
+        ];
     }
 }

@@ -28,5 +28,7 @@ trait Enum
                 return $type;
             }
         }
+        
+        return null;
     }
 }

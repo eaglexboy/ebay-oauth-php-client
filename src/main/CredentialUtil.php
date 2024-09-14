@@ -31,18 +31,20 @@ class CredentialUtil
 
     public static function setLogger(LoggerInterface $logger): void
     {
-        self::$logger = $logger;
+        if (!isset(self::$logger)) {
+            self::$logger = $logger;
+        }
     }
 
     public static function load(string $yamlString): void
     {
-        self::$logger->debug("CredentialHelper.loadFile");
+        self::$logger->debug("CredentialHelper.load");
         self::_load(Yaml::parse($yamlString));
     }
 
     public static function loadFile($yamlFile): void
     {
-        self::$logger->debug("CredentialHelper.load");
+        self::$logger->debug("CredentialHelper.loadFile");
         self::_load(Yaml::parseFile($yamlFile));
     }
 
@@ -64,19 +66,25 @@ class CredentialUtil
 
             if (is_array($value)) {
                 $credentials = new Credentials($value);
-                self::$logger->debug(sprintf("adding for %s - %s", $environment, $credentials->toString()));
-                self::$envCredentialsMap[$environment] = $credentials;
+                self::$logger->debug(sprintf("adding for %s - %s", $environment->name, $credentials->toString()));
+                self::$envCredentialsMap[$environment->value] = $credentials;
             }
         }
     }
 
     public static function dump(): ?string
     {
-        return var_export(self::$envCredentialsMap, true);
+        $str = "";
+        foreach (self::$envCredentialsMap as $key => $value) {
+            echo "Creds: " . $value->toString();
+            $str .= $key . ' => ' . $value->toString();
+        }
+
+        return $str;
     }
 
     public static function getCredentials(Environment $environment): ?Credentials
     {
-        return self::$envCredentialsMap[$environment] ?? null;
+        return self::$envCredentialsMap[$environment->value] ?? null;
     }
 }

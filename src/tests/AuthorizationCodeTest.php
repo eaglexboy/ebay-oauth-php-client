@@ -17,12 +17,14 @@
  *
  */
 
-namespace Ebay\Api\Client\Auth\OAuth2;
+namespace Ebay\Api\Client\Auth\OAuth2\Tests;
 
+use Ebay\Api\Client\Auth\OAuth2\CredentialType;
+use Ebay\Api\Client\Auth\OAuth2\CredentialUtil;
+use Ebay\Api\Client\Auth\OAuth2\OAuth2Api;
 use Ebay\Api\Client\Auth\OAuth2\Model\Environment;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpClient\MockHttpClient;
-use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Component\HttpClient\Response\MockResponse;
 
 class AuthorizationCodeTest extends TestCase
@@ -38,6 +40,7 @@ class AuthorizationCodeTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
+        CredentialLoaderTestUtil::setLogger();
         CredentialLoaderTestUtil::commonLoadCredentials(self::$executionEnv, self::$fromFile);
         self::assertNotnull(CredentialLoaderTestUtil::$CRED_USERNAME, "Please check if test-config.yaml is setup correctly");
         self::assertNotnull(CredentialLoaderTestUtil::$CRED_PASSWORD, "Please check if test-config.yaml is setup correctly");
@@ -56,10 +59,10 @@ class AuthorizationCodeTest extends TestCase
 
         $credentialHelperStr = CredentialUtil::dump();
         $this->printDetailedLog($credentialHelperStr);
-        $this->assertStringContainsString("APP_ID", $credentialHelperStr);
-        $this->assertStringContainsString("DEV_ID", $credentialHelperStr);
-        $this->assertStringContainsString("CERT_ID", $credentialHelperStr);
-        $this->assertStringContainsString("REDIRECT_URI", $credentialHelperStr);
+        $this->assertStringContainsString(CredentialType::APP_ID->value, $credentialHelperStr);
+        $this->assertStringContainsString(CredentialType::DEV_ID->value, $credentialHelperStr);
+        $this->assertStringContainsString(CredentialType::CERT_ID->value, $credentialHelperStr);
+        $this->assertStringContainsString(CredentialType::REDIRECT_URI->value, $credentialHelperStr);
     }
 
     public function testExchangeAuthorizationCode()
@@ -79,34 +82,41 @@ class AuthorizationCodeTest extends TestCase
             return;
         }
 
-        $mockResponse =
-            MockResponse::fromRequest(
-                'GET',
-                'https://localhost:8080?code=12345',
-                [],
-                new MockResponse('Bogus Response')
-            );
+        $redirectResponse = new MockResponse('', [
+            'http_code' => 302,
+            'headers' => ['Location' => 'https://localhost:8080?code=12345&thisIsNotAValidCode']
+        ]);
 
-        $authorizationCode = $this->getAuthorizationCode($mockResponse);
+        // Step 2: Create a mock response for the final destination
+        $mockResponse = new MockResponse('Final destination content', [
+            'http_code' => 200
+        ]);
+
+        $authorizationCode = $this->getAuthorizationCode([$redirectResponse, $mockResponse]);
         $this->assertNotnull($authorizationCode);
 
-        $auth2Api = new OAuth2Api('src/test/test.log', new MockHttpClient([
-            'access_token' => 'ACCESS TOKEN',
-            'token_type' => 'TOKEN TYPE',
-            'expires_in' => 1234567890,
-            'refresh_token' => 'REFRESH TOKEN',
-            'refresh_token_expires_in' => 1234567890
-        ]));
+
+        $mockResponse = new MockResponse(
+            json_encode([
+                'access_token' => 'ACCESS TOKEN',
+                'token_type' => 'TOKEN TYPE',
+                'expires_in' => 1234567890,
+                'refresh_token' => 'REFRESH TOKEN',
+                'refresh_token_expires_in' => 1234567890
+            ]),
+            [
+                'http_code' => 200,
+                'headers' => ['Content-Type' => 'application/json']
+            ]);
+
+        $auth2Api = new OAuth2Api('src/test/test.log', new MockHttpClient($mockResponse));
         $oauth2Response = $auth2Api->exchangeCodeForAccessToken(
             self::$executionEnv,
             $authorizationCode
         );
         $this->assertNotnull($oauth2Response);
 
-        $this->assertTrue($oauth2Response->getRefreshToken() !== null);
         $this->assertNotnull($oauth2Response->getRefreshToken());
-
-        $this->assertTrue($oauth2Response->getAccessToken() !== null);
         $this->assertNotnull($oauth2Response->getAccessToken());
         $this->assertnull($oauth2Response->getErrorMessage());
         CredentialLoaderTestUtil::printDetailedLog("Token Exchange Completed\n" . $oauth2Response);
@@ -123,24 +133,34 @@ class AuthorizationCodeTest extends TestCase
             return;
         }
 
-        $mockResponse =
-            MockResponse::fromRequest(
-                'GET',
-                'https://localhost:8080?code=12345',
-                [],
-                new MockResponse('Bogus Response')
-            );
+        $redirectResponse = new MockResponse('', [
+            'http_code' => 302,
+            'headers' => ['Location' => 'https://localhost:8080?code=12345&thisIsNotAValidCode']
+        ]);
+
+        $mockResponse = new MockResponse('Final destination content', [
+            'http_code' => 200
+        ]);
+        
 
         $refreshToken = null;
-        $authorizationCode = $this->getAuthorizationCode($mockResponse);
+        $authorizationCode = $this->getAuthorizationCode([$redirectResponse, $mockResponse]);
         if ($authorizationCode != null) {
-            $oauth2Api = new OAuth2Api('test_log.log', new MockHttpClient([
-                'access_token' => 'ACCESS TOKEN',
-                'token_type' => 'TOKEN TYPE',
-                'expires_in' => 1234567890,
-                'refresh_token' => 'REFRESH TOKEN',
-                'refresh_token_expires_in' => 1234567890
-            ]));
+            $mockResponse = new MockResponse(
+                json_encode([
+                    'access_token' => 'ACCESS TOKEN',
+                    'token_type' => 'TOKEN TYPE',
+                    'expires_in' => 1234567890,
+                    'refresh_token' => 'REFRESH TOKEN',
+                    'refresh_token_expires_in' => 1234567890
+                ]),
+                [
+                    'http_code' => 200,
+                    'headers' => ['Content-Type' => 'application/json']
+                ]
+            );
+
+            $oauth2Api = new OAuth2Api('test_log.log', new MockHttpClient($mockResponse));
             $oauth2Response = $oauth2Api->exchangeCodeForAccessToken(self::$executionEnv, $authorizationCode);
             $this->assertTrue($oauth2Response->getRefreshToken() !== null);
             $refreshToken = $oauth2Response->getRefreshToken();
@@ -148,42 +168,66 @@ class AuthorizationCodeTest extends TestCase
 
         $this->assertNotnull($refreshToken);
 
-        $oauth2Api = new OAuth2Api('test_log.log', new MockHttpClient([
-            'access_token' => 'TOKEN ACCESS',
-            'token_type' => 'TOKEN TYPE',
-            'expires_in' => 1234567890,
-            'refresh_token' => 'TOKEN REFRESH',
-            'refresh_token_expires_in' => 1234567890
-        ]));
+        $mockResponse = new MockResponse(
+            json_encode([
+                'access_token' => 'TOKEN ACCESS',
+                'token_type' => 'TOKEN TYPE',
+                'expires_in' => 1234567890,
+                'refresh_token' => 'TOKEN REFRESH',
+                'refresh_token_expires_in' => 1234567890
+            ]),
+            [
+                'http_code' => 200,
+                'headers' => ['Content-Type' => 'application/json']
+            ]
+        );
+
+        $oauth2Api = new OAuth2Api('test_log.log', new MockHttpClient($mockResponse));
         $accessTokenResponse = $oauth2Api->getAccessToken(self::$executionEnv, $refreshToken, self::$scopeList);
         $this->assertNotnull($accessTokenResponse);
 
-        $this->assertTrue($accessTokenResponse->getAccessToken() !== null);
         $this->assertNotnull($accessTokenResponse->getAccessToken());
         $this->assertnull($accessTokenResponse->getErrorMessage());
-        $this->assertEquals('TOKEN ACCESS', $accessTokenResponse->getAccessToken());
+        $this->assertEquals('TOKEN ACCESS', $accessTokenResponse->getAccessToken()->getToken());
 
-        $this->assertTrue($accessTokenResponse->getRefreshToken() !== null);
-        $this->assertnull($accessTokenResponse->getRefreshToken());
-        $this->assertEquals('TOKEN REFRESH', $accessTokenResponse->getRefreshToken());
+        $this->assertNotnull($accessTokenResponse->getRefreshToken());
+        $this->assertEquals('TOKEN REFRESH', $accessTokenResponse->getRefreshToken()->getToken());
 
-        $this->printDetailedLog("Refresh To Access Completed\n" . json_encode($accessTokenResponse));
+        $this->printDetailedLog("\nRefresh To Access Completed\n" . json_encode($accessTokenResponse));
     }
 
-    private function getAuthorizationResponseUrl(MockResponse $response)
+    private function getAuthorizationResponseUrl(/*MockResponse*/ array $mockResponse)
     {
-        $client = new MockHttpClient($response);
+        $client = new MockHttpClient($mockResponse);
         $auth2Api = new OAuth2Api('test_log.log');
         $authorizeUrl = $auth2Api->generateUserAuthorizationUrl(self::$executionEnv, self::$scopeList, 'current-page');
+        
+        $response = $client->request('GET', $authorizeUrl, [
+            'max_redirects' => 20
+        ]);
 
-        $response = $client->request('GET', $authorizeUrl);
-        $url = $response->getRequestUrl();
+        // Blocking call to get the final data.
+        $response->getContent(false);        
+        $statusCode = $response->getStatusCode();
+        $isRedirect = $statusCode === 302;
+
+        while($isRedirect){
+            $redirectUrl = $response->getInfo('headers')['Location'] ?? $response->getInfo('redirect_url');
+            $response = $client->request('GET', $redirectUrl, [
+                'max_redirects' => 20
+            ]);
+
+            // Blocking call to get the final data.
+            $response->getContent(false);   
+            $statusCode = $response->getStatusCode();
+            $isRedirect = $statusCode === 302;
+        }
+
+        $url = $response->getInfo('url') ?? $response->getRequestUrl();
         return $url;
     }
 
-    private function getAuthorizationCode(
-        MockResponse $response = new MockResponse('Bogus Response')
-    ) {
+    private function getAuthorizationCode(array $response = null) {
 
         $url = $this->getAuthorizationResponseUrl($response);
         $codeIndex = strpos($url, "code=");

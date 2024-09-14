@@ -1,0 +1,16 @@
+name: ebay-config
+
+# Trading API OAuth - https://developer.ebay.com/api-docs/static/oauth-tokens.html
+
+# UPDATE the values in this file, before running the tests
+api.sandbox.ebay.com:
+    appid: "test-app-id-sanbox"
+    certid: "test-cert-id-sanbox"
+    devid: "test-dev-id-sanbox"
+    redirecturi: "test-redirect-ui-sanbox"
+
+api.ebay.com:
+    appid: "test-app-id-dev"
+    certid: "test-cert-id-dev"
+    devid: "test-dev-id-dev"
+    redirecturi: "test-redirect-ui-dev"

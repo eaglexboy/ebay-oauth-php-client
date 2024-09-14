@@ -27,21 +27,22 @@ class Credentials
     public function __construct(array &$map)
     {
         foreach ($map as $key => $value) {
-            CredentialUtil::$logger->debug(sprintf("adding credentials \t%s = %s", $key, $value));
+            CredentialUtil::$logger->debug(sprintf("attempting to add credentials \t%s = %s", $key, $value));
             $credentialType = CredentialType::lookupBy($key);
             if ($credentialType !== null) {
-                $this->credentialTypeLookupMap[$credentialType] = $value;
+                CredentialUtil::$logger->debug("creds added");
+                $this->credentialTypeLookupMap[$credentialType->value] = $value;
             }
         }
     }
 
-    public function get(string $credentialType): ?string
+    public function get(CredentialType $credentialType): ?string
     {
-        return $this->credentialTypeLookupMap[$credentialType] ?? null;
+        return $this->credentialTypeLookupMap[$credentialType->value] ?? null;
     }
 
     public function toString(): string
     {
-        return var_export($this->credentialTypeLookupMap, true);
+        return print_r($this->credentialTypeLookupMap, true);
     }
 }
