@@ -1,4 +1,6 @@
 vendor
+.vscode
+composer.lock
 
 src/test/ebay-config.yaml
 src/test/test-config.yaml

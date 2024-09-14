@@ -60,6 +60,7 @@ Contributions in terms of patches, features, or comments are always welcome. Ref
 2. [@tanjav](https://github.com/tanjav)
 3. [@sonamrks](https://github.com/sonamrks)
 4. [@LokeshRishi](https://github.com/LokeshRishi)
+5. [Eleazar Castellanos](https://github.com/eaglexboy)
 
 
 ## References
