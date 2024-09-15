@@ -44,18 +44,28 @@ class OAuth2Api
     private HttpClientInterface $client;
 
     /**
-     * @param resource|string $stream If a missing path can't be created, an
-     *                                UnexpectedValueException will be thrown on first write
+     * @param resource|string $stream If a missing path can't be created and CredentialUtil's
+     *                                logger is not set, an UnexpectedValueException will be thrown
+     *                                on first write
      * @param HttpClientInterface $client The HTTP client to use for making network calls
      * @param Level $level The minimum logging level at which this handler will be triggered
      */
-    public function __construct($stream, ?HttpClientInterface $client = null, ?Level $level = Level::Debug)
-    {
+    public function __construct(
+        mixed $stream,
+        ?HttpClientInterface $client = null,
+        ?Level $level = Level::Debug
+    ) {
         if (!isset(self::$logger)) {
-            self::$logger = new Logger('OAuth2Api');
-        }
-        if (!isset(self::$logger)) {
-            self::$logger->pushHandler(new StreamHandler($stream, $level));
+            $logger = CredentialUtil::getLogger();
+            if (isset($logger)) {
+                self::$logger = $logger;
+            } else {
+                self::$logger = new Logger('OAuth2Api');
+
+                if (!isset(self::$logger)) {
+                    self::$logger->pushHandler(new StreamHandler($stream, $level));
+                }
+            }
         }
 
         $this->client = isset($client) ? $client : HttpClient::create();
@@ -178,8 +188,7 @@ class OAuth2Api
         Environment $environment,
         RefreshToken $refreshToken,
         array $scopes
-    ): OAuthResponse
-    {
+    ): OAuthResponse {
         $credentials = CredentialUtil::getCredentials($environment);
         $scope = OAuth2Util::buildScopeForRequest($scopes);
 

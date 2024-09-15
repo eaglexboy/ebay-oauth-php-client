@@ -36,6 +36,11 @@ class CredentialUtil
         }
     }
 
+    public static function getLogger(): ?LoggerInterface
+    {
+        return self::$logger;
+    }
+
     public static function load(string $yamlString): void
     {
         self::$logger->debug("CredentialHelper.load");
