@@ -48,6 +48,12 @@ class CredentialUtil
         self::_load(Yaml::parseFile($yamlFile));
     }
 
+    public static function loadArray(array $values): void
+    {
+        self::$logger->debug("CredentialHelper.loadArray");
+        self::_load($values);
+    }
+
     private static function _load(mixed $values): void
     {
         self::$logger->debug(var_export($values, true));
