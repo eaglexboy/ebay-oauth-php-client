@@ -24,8 +24,8 @@ use Ebay\Api\Client\Auth\OAuth2\Model\AccessToken;
 
 class OAuthResponse implements JsonSerializable
 {
-    private AccessToken $accessToken;
-    private RefreshToken $refreshToken;
+    private ?AccessToken $accessToken;
+    private ?RefreshToken $refreshToken;
     private ?string $errorMessage;
 
     public function __construct(
