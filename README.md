@@ -13,9 +13,26 @@ This library is created as a PHP project and can be used as a dependency in a PH
 ## Installation
 Install in your project by downloading the repo and extracting in your project or using composer
 
+### Composer
+Add the library to your `composer.json`
 ```
- composer require ebay/ebay-oauth-php-client --repository='{"type":"vcs","url":"https://github.com/eaglexboy/ebay-oauth-php-client"}'
- ```
+{
+    "require": {
+      "ebay/ebay-oauth-php-client": "^1.0"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/eaglexboy/ebay-oauth-php-client"
+        }
+    ]
+}
+```
+or via command line
+```
+composer config repositories.ebay-oauth-php-client vcs https://github.com/eaglexboy/ebay-oauth-php-client
+composer require ebay/ebay-oauth-php-client:"^1.0"
+```
 
 ## Getting Started
 All interactions with this library can be performed using `oauth2Api = new OAuth2Api();`
@@ -73,6 +90,6 @@ Contributions in terms of patches, features, or comments are always welcome. Ref
 3. https://developer.ebay.com/my/keys
 
 ## License
-Copyright (c) 2023 eBay Inc.
+Copyright (c) 2024 eBay Inc.
 
 Use of this source code is governed by a Apache-2.0 license that can be found in the LICENSE file or at https://opensource.org/licenses/Apache-2.0.

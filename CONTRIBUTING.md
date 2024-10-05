@@ -1,6 +1,6 @@
 # eBay OAuth Client Contribution Guidelines
 
-Thank you so much for wanting to contribute to ebay-oauth-php-client ! Here are a few important things you should know about contributing:
+Thank you so much for wanting to contribute to ebay-oauth-php-client! Here are a few important things you should know about contributing:
 
   1. API changes require discussion, use cases, etc. Code comes later.
   2. Pull requests are great for small fixes for bugs, documentation, etc.
