@@ -8,7 +8,7 @@ eBay OAuth client library is a simple and easy-to-use library for integrating wi
 [OAuth 2.0](https://tools.ietf.org/html/rfc6749) is the most widely used standard for authentication and authorization for API based access. The complete end to end documentation on how eBay OAuth functions is available at [developer.ebay.com](https://developer.ebay.com/api-docs/static/oauth-tokens.html).
 
 ## Supported Languages
-This is created as a PHP project and can be used as a dependency in a PHP based application
+This library is created as a PHP project and can be used as a dependency in a PHP based application
 
 ## Installation
 Install in your project by downloading the repo and extracting in your project or using composer
