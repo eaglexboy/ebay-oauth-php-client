@@ -19,19 +19,12 @@ Add the library to your `composer.json`
 {
     "require": {
       "eaglexboy/ebay-oauth-php-client": "^1.0"
-    },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/eaglexboy/ebay-oauth-php-client"
-        }
-    ]
+    }
 }
 ```
 or via command line
 ```
-composer config repositories.ebay-oauth-php-client vcs https://github.com/eaglexboy/ebay-oauth-php-client
-composer require ebay/ebay-oauth-php-client:"^1.0"
+composer require eaglexboy/ebay-oauth-php-client
 ```
 
 ## Getting Started
