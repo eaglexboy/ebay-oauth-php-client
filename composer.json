@@ -1,5 +1,5 @@
 {
-    "name": "ebay/ebay-oauth-php-client",
+    "name": "eaglexboy/ebay-oauth-php-client",
     "type": "library",
     "description": "eBay OAuth Client which helps in easy integration",
     "keywords": ["ebay", "oauth", "client"],
