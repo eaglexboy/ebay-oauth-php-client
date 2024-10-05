@@ -18,7 +18,7 @@ Add the library to your `composer.json`
 ```
 {
     "require": {
-      "ebay/ebay-oauth-php-client": "^1.0"
+      "eaglexboy/ebay-oauth-php-client": "^1.0"
     },
     "repositories": [
         {
@@ -77,11 +77,7 @@ Contributions in terms of patches, features, or comments are always welcome. Ref
   - [HTTP Client](https://symfony.com/doc/current/http_client.html)
 
 ## Developers and Contributors
-1. [@sengopal](https://github.com/sengopal)
-2. [@tanjav](https://github.com/tanjav)
-3. [@sonamrks](https://github.com/sonamrks)
-4. [@LokeshRishi](https://github.com/LokeshRishi)
-5. [Eleazar Castellanos](https://github.com/eaglexboy)
+1. [Eleazar Castellanos](https://github.com/eaglexboy)
 
 
 ## References
@@ -90,6 +86,6 @@ Contributions in terms of patches, features, or comments are always welcome. Ref
 3. https://developer.ebay.com/my/keys
 
 ## License
-Copyright (c) 2024 eBay Inc.
+Copyright (c) 2024 EC Systems Design.
 
 Use of this source code is governed by a Apache-2.0 license that can be found in the LICENSE file or at https://opensource.org/licenses/Apache-2.0.
